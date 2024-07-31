@@ -2,7 +2,7 @@ using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 
-namespace pengwin_learning_dapper.Controllers
+namespace BodyDapper.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

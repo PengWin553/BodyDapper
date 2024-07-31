@@ -3,3 +3,4 @@ public class Client{
     public string? ClientName {get; set;}
     public string? Residency {get; set;}
 }
+
