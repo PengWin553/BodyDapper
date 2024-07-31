@@ -1,0 +1,140 @@
+** How to Build a CRUD API Using Dapper in ASP.NET Core with SQLite **
+
+--- Basic Setup 
+1. Create a project folder
+2. Go to VS Code
+3. Run "dotnet new webapi --use-controllers" in terminal to create boilerplate project
+4. Delete the default Controller and its corresponding file in the root folder
+5. Install SQLite Extension by alexcvzz
+6. Install Dapper 2.1.35 (ctrl+shift+p)
+7. Install Microsoft.Data.Sqlite 8.0.0  (ctrl+shift+p)
+
+--- Creating the Database
+8. In the root directory, create a file named "exampleData.db" which serves as your database
+9. After creating the database, CTRL+SHIFT+P, and type in ">SqLite: Open Database"
+10. Select the database that you want to use (in this example: exampleData.db)
+
+The "SQLITE EXPLORER" should show, and should contain your exampleData.db file.
+
+--- Creating the Table and Inserting Data
+11. Click the "New Query" icon of your database inside the SQLITE EXPLORER
+12. Make a create table query:
+
+-- create table:
+CREATE TABLE Client (
+    Id integer PRIMARY KEY AUTOINCREMENT,
+    ClientName text NULL,
+    Residency text NULL
+)
+
+13. Select the query and run it by pressing CTRL+SHIFT+P and typing ">Sqlite: Run Query"
+
+14. Insert data into the table by making an insert query:
+
+(Comment out the previous query)
+
+--insert data into table:
+INSERT INTO Client (ClientName, Residency)
+VALUES
+    ("Pengwin", "Ushishiro"),
+    ("Mae", "Luz"),
+    ("Kanno", "Japan")
+
+15. Select the query and run it by pressing CTRL+SHIFT+P and typing ">Sqlite: Run Query"
+
+16. See all the data in the new table:
+
+(Comment out the previous query)
+
+--select statement to show all table data:
+SELECT * FROM Client
+
+17. Select the query and run it by pressing CTRL+SHIFT+P and typing ">Sqlite: Run Query"
+
+You can choose to save the SQLITE file where you made your queries.
+
+---The Model
+18. Create the Models folder in the root directory
+19. Inside this Models folder, create a file named "Client.cs"
+20. Copypaste the following code inside the Client.cs file:
+
+public class Client{
+    public int Id {get; set;}
+    public string? ClientName {get; set;}
+    public string? Residency {get; set;}
+}
+
+--The Controller
+21. Right-click the Controllers folder > New C# > API Controller
+22. Name it "ClientApiController.cs"
+23. Inside the ClientApiController.cs, copy paste this code:
+
+using Dapper;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.Sqlite;
+
+namespace pengwin_learning_dapper.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class ClientApiController : ControllerBase
+    {
+
+        private SqliteConnection _connection = new SqliteConnection("Data Source = exampleData.db");
+
+        [HttpGet("GetClients")]
+        public async Task<IActionResult> GetClients(){
+
+            const string query = "Select * from Client";
+            var result  = await _connection.QueryAsync<Client>(query);
+            
+            if(result.Count() == 0)
+                return BadRequest("Sample Error Message...");
+
+            return Ok(result);
+        }
+
+        [HttpPost("SaveClient")]
+        public async Task<IActionResult> SaveClientAsync(Client client){
+            
+            const string query = "Insert into Client (ClientName, Residency) Values ( @ClientName, @Residency ); Select * from Client order by Id desc Limit 1";
+            
+            var result  = await _connection.QueryAsync<Client>(query, client);
+
+            return Ok(result);
+        }
+
+        [HttpPut("UpdateClient")]
+        public async Task<IActionResult> UpdateClientAsync(int Id, Client client){
+            
+            const string query = "Update Client set ClientName = @theClientName, Residency = @theResidency where Id = @Id; Select * from Client where Id = @Id limit 1 ";
+            
+            var result  = await _connection.QueryAsync<Client>(query, new {
+                Id = Id,
+                theClientName = client.ClientName,
+                theResidency = client.Residency
+            });
+
+            return Ok(result);
+        }
+
+        [HttpDelete("DeleteClient")]
+        public async Task<IActionResult> DeleteClient(int Id){
+            
+            const string query = "Delete From Client where Id = @Id; ";
+            
+            await _connection.QueryAsync<Client>(query, new { Id = Id,});
+
+            return Ok();
+        }
+    }
+}
+
+24. Done. Just run it with this command:
+
+dotnet watch run
+
+
+
+
+
