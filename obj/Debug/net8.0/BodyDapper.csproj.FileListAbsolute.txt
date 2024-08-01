@@ -112,3 +112,4 @@ C:\Users\SECCA\Downloads\BodyDapper\obj\Debug\net8.0\refint\BodyDapper.dll
 C:\Users\SECCA\Downloads\BodyDapper\obj\Debug\net8.0\BodyDapper.pdb
 C:\Users\SECCA\Downloads\BodyDapper\obj\Debug\net8.0\BodyDapper.genruntimeconfig.cache
 C:\Users\SECCA\Downloads\BodyDapper\obj\Debug\net8.0\ref\BodyDapper.dll
+C:\Users\SECCA\Downloads\BodyDapper\obj\Debug\net8.0\BodyDapper.sourcelink.json
