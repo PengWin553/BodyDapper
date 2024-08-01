@@ -1,0 +1,4 @@
+CORS controls who can access your server from a different domain.
+You define a policy in your Startup.cs file to specify allowed origins, methods, and headers.
+You apply this policy to your application so it knows to enforce these rules.
+By setting up CORS, you ensure your server only allows requests from trusted sources, enhancing security.
