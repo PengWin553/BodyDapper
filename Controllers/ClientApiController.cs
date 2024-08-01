@@ -14,7 +14,7 @@ namespace BodyDapper.Controllers
         [HttpGet("GetClients")]
         public async Task<IActionResult> GetClients(){
 
-            const string query = "Select * from Client";
+            const string query = "Select * from Client order by Id DESC";
             var result  = await _connection.QueryAsync<Client>(query);
             
             if(result.Count() == 0)
